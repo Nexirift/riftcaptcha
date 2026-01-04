@@ -29,7 +29,7 @@ export const env = createEnv({
         CORS_ENABLED: z.coerce.boolean().default(true),
         CORS_ORIGIN: z.string().default('*'),
         CORS_METHODS: z.string().default('GET,POST,OPTIONS'),
-        CORS_HEADERS: z.string().default('Content-Type,Authorization'),
+        CORS_HEADERS: z.string().default('Content-Type,Authorization,X-Altcha-Spam-Filter'),
 
         // Rate Limiting (requests per window)
         RATE_LIMIT_ENABLED: z.coerce.boolean().default(false),
