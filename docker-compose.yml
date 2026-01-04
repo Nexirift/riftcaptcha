@@ -1,0 +1,9 @@
+services:
+  riftcaptcha:
+    image: ghcr.io/nexirift/riftcaptcha:latest
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
