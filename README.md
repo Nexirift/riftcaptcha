@@ -15,6 +15,7 @@ This was created for use in [Pulsar](https://github.com/Nexirift/pulsar).
 - Configurable logging
 - CORS support
 - Challenge expiration
+- Site key and secret key pair support
 
 ## Quick Start
 

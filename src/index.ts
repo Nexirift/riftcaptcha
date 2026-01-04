@@ -5,6 +5,7 @@ import { createChallenge, verifySolution } from 'altcha-lib';
 import { env } from './env.js';
 import { logger } from './utils/logger.js';
 import { rateLimiter } from './middleware/rateLimit.js';
+import { keyValidator } from './utils/keyValidator.js';
 import type { ChallengeResponse, VerifyResponse, HealthResponse, ErrorResponse } from './types.js';
 
 const app = new Hono();
@@ -20,6 +21,11 @@ if (env.CORS_ENABLED) {
 
 // Add rate limiting middleware
 app.use('/*', rateLimiter);
+
+// Index redirect (if configured)
+if (env.REDIRECT_INDEX) {
+  app.get('/', (c) => c.redirect(env.REDIRECT_INDEX!));
+}
 
 // Health check endpoint
 app.get('/health', (c) => {
@@ -44,6 +50,17 @@ app.get('/config', (c) => {
 
 app.get('/challenge', async (c) => {
   try {
+    // Validate sitekey if required
+    if (env.REQUIRE_KEYS) {
+      const sitekey = c.req.query('sitekey');
+      if (!keyValidator.validateSiteKey(sitekey)) {
+        const errorResponse: ErrorResponse = {
+          error: 'Invalid or missing sitekey'
+        };
+        return c.json(errorResponse, 401);
+      }
+    }
+
     const challenge = await createChallenge({
       hmacKey: env.HMAC_KEY,
       maxNumber: env.MAX_NUMBER,
@@ -80,6 +97,19 @@ app.get('/challenge', async (c) => {
 
 app.post('/verify', async (c) => {
   try {
+    // Validate secretkey if required
+    if (env.REQUIRE_KEYS) {
+      const secretkey = c.req.query('secretkey');
+      if (!keyValidator.validateSecretKey(secretkey)) {
+        const errorResponse: VerifyResponse = {
+          success: false,
+          verified: false,
+          error: 'Invalid or missing secretkey',
+        };
+        return c.json(errorResponse, 401);
+      }
+    }
+
     const body = await c.req.json();
     const payload = body.payload ?? body;
 

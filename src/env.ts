@@ -11,9 +11,13 @@ export const env = createEnv({
         // Server Configuration
         PORT: z.coerce.number().min(1).max(65535).default(3000),
         NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+        REDIRECT_INDEX: z.url().optional(),
 
         // Security
         HMAC_KEY: z.string().min(32, "HMAC key should be at least 32 characters"),
+        SITE_KEYS: z.string().min(1, "Site keys are required (comma-separated)").optional(),
+        SECRET_KEYS: z.string().min(1, "Secret keys are required (comma-separated)").optional(),
+        REQUIRE_KEYS: z.coerce.boolean().default(false),
 
         // Challenge Configuration
         MAX_NUMBER: z.coerce.number().positive().default(100000),
