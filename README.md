@@ -1,4 +1,4 @@
-# RiftCaptcha
+# RIFTCaptcha
 
 A dead simple CAPTCHA service utilizing ALTCHA's Proof of Work (PoW).
 
