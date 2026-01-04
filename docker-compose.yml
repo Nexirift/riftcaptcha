@@ -1,6 +1,6 @@
 services:
   riftcaptcha:
-    image: ghcr.io/nexirift/riftcaptcha:latest
+    image: ghcr.io/nexirift/riftcaptcha:main
     build: .
     restart: unless-stopped
     ports:
